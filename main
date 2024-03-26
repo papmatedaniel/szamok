@@ -1,0 +1,39 @@
+import re
+
+input_text = """
+        467..114..
+        ...*......
+        ..35..633.
+        ......#...
+        617*......
+        .....+.58.
+        ..592.....
+        ......755.
+        ...$.*....
+        .664.598..
+    """
+
+splitted_input = [row.strip() for row in input_text.split('\n') if row.strip()]
+
+result = []
+
+for i, row in enumerate(splitted_input):
+    trimmed_row = row.strip()
+    found_numbers = re.findall(r'\d+', trimmed_row) or []
+
+    for number in found_numbers:
+        start_index = trimmed_row.index(number)
+        end_index = start_index + len(str(number)) - 1
+
+        checkable_rows = [i - 1, i, i + 1]
+
+        for jup in checkable_rows:
+            curr_checking_row = splitted_input[jup].strip() if 0 <= jup < len(splitted_input) else ''
+
+            for start in range(start_index - 1, end_index + 2):
+                curr_cell = curr_checking_row[start] if 0 <= start < len(curr_checking_row) else '.'
+
+                if isinstance(curr_cell, str) and curr_cell != '.' and not curr_cell.isdigit():
+                    result.append(number)
+
+print(result)
